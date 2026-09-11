@@ -48,7 +48,7 @@ export async function generatePosts(input: GenerateInput): Promise<{ posts?: Gen
     .join("\n");
 
   const prompt = `You are an elite social media content strategist.
-Industry: ${def.name || input.industry}
+Industry: ${def.label || input.industry}
 Brand Name: ${input.brandName || "Unknown"}
 Duration: ${DURATIONS[input.duration].label} (${input.postCount} posts)
 
@@ -59,7 +59,7 @@ ${extractedText}
 Your task is to write the captions, visual directions, and hashtags for ${input.postCount} posts according to the following schedule and content pillars:
 ${scheduleContext}
 
-CRITICAL INSTRUCTION: Before generating the posts, check if the provided Brand Name and Reference Material align with the selected Industry (${def.name || input.industry}).
+CRITICAL INSTRUCTION: Before generating the posts, check if the provided Brand Name and Reference Material align with the selected Industry (${def.label || input.industry}).
 If the details clearly belong to a DIFFERENT industry (e.g., they selected Real Estate but provided Jewellery details), set \`isValid\` to false and provide a helpful \`errorMessage\` suggesting which industry option they should select. Do not generate the posts in this case.
 If the details align, set \`isValid\` to true and generate the posts. Follow the industry best practices. Maintain the brand voice from the reference material. Ensure captions are engaging and visual directions are clear.
 `;
