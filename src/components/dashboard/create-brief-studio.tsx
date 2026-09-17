@@ -6,23 +6,16 @@ import {
   Gem,
   SprayCan,
   UtensilsCrossed,
-  Calendar,
-  Clock,
   Check,
   FileText,
   UploadCloud,
   X,
   Sparkles,
   ArrowRight,
-  Loader2,
   ShieldCheck,
-  Info,
-  TrendingUp,
-  Share2,
   Compass,
-  Lightbulb,
 } from "lucide-react";
-import { INDUSTRIES, DURATIONS } from "@/lib/engine";
+import { DURATIONS } from "@/lib/engine";
 import type { DurationKey, IndustryKey } from "@/lib/engine/types";
 
 export interface CreateBriefStudioProps {
@@ -192,425 +185,428 @@ export function CreateBriefStudio({ onPlanCreated, onCancel }: CreateBriefStudio
   };
 
   return (
-    <div className={`scope-${industry} relative`}>
-      {/* Dynamic Processing Overlay */}
+    <div className={`scope-${industry} relative min-h-screen bg-ink selection:bg-accent/30 selection:text-cream`}>
+      {/* Immersive Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ink/95 px-6 backdrop-blur-xl">
-          <div className="relative flex flex-col items-center max-w-lg text-center">
-            <div className="relative mb-6">
-              <div className="size-16 rounded-full border-2 border-accent/20 border-t-accent animate-spin" />
-              <Sparkles className="absolute inset-0 m-auto size-6 text-accent animate-pulse" />
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ink/90 backdrop-blur-2xl transition-all duration-700">
+          <div className="relative flex flex-col items-center max-w-xl text-center px-6">
+            <div className="relative mb-8">
+              <div className="absolute inset-0 rounded-full bg-accent/20 blur-xl animate-pulse" />
+              <div className="relative size-20 rounded-full border border-accent/30 border-t-accent animate-spin" />
+              <Sparkles className="absolute inset-0 m-auto size-7 text-accent animate-pulse" />
             </div>
 
-            <span className="text-[10px] uppercase tracking-[0.35em] text-accent font-medium">
+            <span className="text-[11px] uppercase tracking-[0.4em] text-accent font-medium mb-4 block">
               Atelier Neural Engine Active
             </span>
 
-            <h3 className="mt-4 font-display text-2xl sm:text-3xl text-cream font-medium">
+            <h3 className="font-display text-3xl sm:text-4xl text-cream font-medium tracking-tight h-20 flex items-center justify-center transition-opacity duration-500">
               {GENERATION_STAGES[stageIndex]}
             </h3>
 
-            <p className="mt-3 text-xs text-mist leading-relaxed max-w-sm">
-              Crafting bespoke captions, platform-tuned hashtags, and art-directed visual storyboards for{" "}
-              <span className="text-cream font-medium">{brandName.trim() || activeProfile.label}</span>.
-            </p>
-
-            <div className="mt-8 flex gap-1.5 w-full max-w-xs">
-              {GENERATION_STAGES.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1 flex-1 rounded-full transition-colors duration-500 ${
-                    i <= stageIndex ? "bg-accent" : "bg-white/10"
-                  }`}
-                />
-              ))}
+            <div className="w-full h-[2px] bg-white/5 rounded-full mt-10 overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-accent/50 via-accent to-accent/50 transition-all duration-1000 ease-out"
+                style={{ width: `${((stageIndex + 1) / GENERATION_STAGES.length) * 100}%` }}
+              />
             </div>
+            
+            <p className="mt-6 text-sm text-mist/80 max-w-md font-light leading-relaxed">
+              Curating bespoke editorial direction for <span className="text-cream font-medium">{brandName.trim() || activeProfile.label}</span>. This may take a moment.
+            </p>
           </div>
         </div>
       )}
 
-      {/* Main Studio Grid: Left Builder (60%), Right Director Console (40%) */}
-      <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-        {/* LEFT COLUMN: Interactive Builder */}
-        <div className="space-y-10">
-          {/* Section 01: Industry Dialect */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="flex size-6 items-center justify-center rounded-full bg-accent text-ink text-[11px] font-bold">
-                1
-              </span>
-              <div>
-                <h3 className="font-display text-xl text-cream font-medium">
-                  Select Industry Dialect
-                </h3>
-                <p className="text-xs text-dim">
-                  Each industry communicates with distinct vocabulary, pacing, and emotional drivers.
-                </p>
-              </div>
-            </div>
+      {/* Main Studio Canvas */}
+      <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+        
+        {/* Header Section */}
+        <div className="mb-14 max-w-3xl">
+          <button 
+            onClick={onCancel}
+            className="group flex items-center gap-2 text-[11px] uppercase tracking-widest text-dim hover:text-cream transition-colors mb-8"
+          >
+            <ArrowRight className="size-3.5 rotate-180 transition-transform group-hover:-translate-x-1" />
+            Back to Dashboard
+          </button>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-cream font-medium tracking-tight mb-4">
+            Studio <span className="text-accent italic pr-2">Atelier</span>
+          </h1>
+          <p className="text-mist text-lg sm:text-xl font-light max-w-2xl leading-relaxed">
+            Configure your bespoke content strategy. Our neural engine will architect a comprehensive, ready-to-publish brief tailored to your exact brand DNA.
+          </p>
+        </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              {INDUSTRY_PROFILES.map((profile) => {
-                const Icon = profile.icon;
-                const isSelected = industry === profile.key;
-                return (
-                  <button
-                    key={profile.key}
-                    type="button"
-                    onClick={() => setIndustry(profile.key)}
-                    className={`relative cursor-pointer rounded-2xl border p-5 text-left transition-all duration-300 ${
-                      isSelected
-                        ? "border-accent bg-accent/[0.06] shadow-lg shadow-black/40"
-                        : "border-line bg-white/[0.015] hover:border-white/20 hover:bg-white/[0.025]"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div
-                        className={`flex size-9 items-center justify-center rounded-xl border transition-colors ${
-                          isSelected ? "border-accent text-accent bg-accent/10" : "border-line text-mist"
-                        }`}
-                      >
-                        <Icon className="size-4" strokeWidth={1.7} />
+        <div className="grid gap-12 lg:gap-16 lg:grid-cols-[1.8fr_1fr] items-start">
+          
+          {/* LEFT COLUMN: The Builder */}
+          <div className="space-y-16">
+            
+            {/* Section 01: Industry Dialect */}
+            <section className="relative">
+              <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-accent/50 via-line to-transparent hidden md:block" />
+              <div className="flex items-center gap-4 mb-8">
+                <span className="flex size-8 items-center justify-center rounded-full bg-accent text-ink text-xs font-bold shadow-[0_0_15px_rgba(201,169,126,0.3)]">
+                  1
+                </span>
+                <div>
+                  <h3 className="font-display text-2xl text-cream">Industry Dialect</h3>
+                  <p className="text-sm text-dim mt-1 font-light">Select the foundational tone and vocabulary for your strategy.</p>
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {INDUSTRY_PROFILES.map((profile) => {
+                  const Icon = profile.icon;
+                  const isSelected = industry === profile.key;
+                  return (
+                    <button
+                      key={profile.key}
+                      type="button"
+                      onClick={() => setIndustry(profile.key)}
+                      className={`group relative cursor-pointer overflow-hidden rounded-2xl border p-6 text-left transition-all duration-500 ${
+                        isSelected
+                          ? "border-accent bg-accent/[0.03] shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
+                          : "border-white/5 bg-white/[0.01] hover:border-white/20 hover:bg-white/[0.03]"
+                      }`}
+                    >
+                      {isSelected && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent opacity-50" />
+                      )}
+                      
+                      <div className="relative z-10 flex items-start justify-between mb-5">
+                        <div
+                          className={`flex size-12 items-center justify-center rounded-2xl transition-all duration-500 ${
+                            isSelected ? "bg-accent text-ink shadow-lg" : "bg-white/5 text-mist group-hover:bg-white/10 group-hover:text-cream"
+                          }`}
+                        >
+                          <Icon className="size-6" strokeWidth={1.5} />
+                        </div>
+                        <div className={`flex size-6 items-center justify-center rounded-full border transition-all duration-300 ${
+                          isSelected ? "border-accent bg-accent text-ink" : "border-white/10 text-transparent group-hover:border-white/30"
+                        }`}>
+                          <Check className="size-3.5" strokeWidth={3} />
+                        </div>
                       </div>
-                      <span
-                        className={`flex size-4 items-center justify-center rounded-full border transition-all ${
-                          isSelected ? "border-accent bg-accent text-ink" : "border-line text-transparent"
-                        }`}
+
+                      <div className="relative z-10">
+                        <h4 className={`font-display text-xl transition-colors ${isSelected ? "text-accent" : "text-cream"}`}>
+                          {profile.label}
+                        </h4>
+                        <p className="mt-2 text-xs font-medium uppercase tracking-widest text-dim mb-3">
+                          {profile.tagline}
+                        </p>
+                        <p className="text-sm text-mist/80 font-light leading-relaxed">
+                          {profile.dialectDescription}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* Section 02: Cadence & Strategic Volume */}
+            <section className="relative">
+              <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-accent/50 via-line to-transparent hidden md:block" />
+              <div className="flex items-center gap-4 mb-8">
+                <span className="flex size-8 items-center justify-center rounded-full bg-accent text-ink text-xs font-bold shadow-[0_0_15px_rgba(201,169,126,0.3)]">
+                  2
+                </span>
+                <div>
+                  <h3 className="font-display text-2xl text-cream">Cadence & Volume</h3>
+                  <p className="text-sm text-dim mt-1 font-light">Define the timeline and density of your content rollout.</p>
+                </div>
+              </div>
+
+              <div className="space-y-8">
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-dim block mb-4 font-medium flex items-center gap-2">
+                    <span className="w-4 h-px bg-dim/40" /> Duration
+                  </label>
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {DURATION_CONFIGS.map((cfg) => {
+                      const isSelected = duration === cfg.key;
+                      return (
+                        <button
+                          key={cfg.key}
+                          type="button"
+                          onClick={() => setDuration(cfg.key)}
+                          className={`group relative rounded-xl border p-4 text-left transition-all duration-300 ${
+                            isSelected
+                              ? "border-accent bg-accent/[0.05]"
+                              : "border-white/5 bg-white/[0.01] hover:border-white/20"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <span className={`font-display text-lg ${isSelected ? "text-accent" : "text-cream"}`}>{cfg.label}</span>
+                            {isSelected && <Check className="size-4 text-accent" strokeWidth={2.5} />}
+                          </div>
+                          <span className="block text-xs text-mist/70 font-light">{cfg.recommendedFor}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-dim block mb-4 font-medium flex items-center gap-2">
+                    <span className="w-4 h-px bg-dim/40" /> Volume
+                  </label>
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {VOLUME_CONFIGS.map((cfg) => {
+                      const isSelected = postCount === cfg.value;
+                      return (
+                        <button
+                          key={cfg.value}
+                          type="button"
+                          onClick={() => setPostCount(cfg.value)}
+                          className={`group relative rounded-xl border p-4 text-left transition-all duration-300 ${
+                            isSelected
+                              ? "border-accent bg-accent/[0.05]"
+                              : "border-white/5 bg-white/[0.01] hover:border-white/20"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <span className={`font-display text-lg ${isSelected ? "text-accent" : "text-cream"}`}>{cfg.label}</span>
+                            {isSelected && <Check className="size-4 text-accent" strokeWidth={2.5} />}
+                          </div>
+                          <span className="block text-xs text-mist/70 font-light">{cfg.rhythm}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 03: Brand Context */}
+            <section className="relative">
+              <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-accent/50 to-transparent hidden md:block" />
+              <div className="flex items-center gap-4 mb-8">
+                <span className="flex size-8 items-center justify-center rounded-full bg-accent text-ink text-xs font-bold shadow-[0_0_15px_rgba(201,169,126,0.3)]">
+                  3
+                </span>
+                <div>
+                  <h3 className="font-display text-2xl text-cream">Brand Context</h3>
+                  <p className="text-sm text-dim mt-1 font-light">Provide the raw material. The engine will refine it into compelling narratives.</p>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                <div className="group rounded-2xl border border-white/10 bg-white/[0.01] p-5 transition-all duration-300 focus-within:border-accent focus-within:bg-white/[0.02]">
+                  <label className="text-[11px] uppercase tracking-[0.2em] text-dim block font-medium group-focus-within:text-accent transition-colors">
+                    Brand Name / Campaign Title
+                  </label>
+                  <input
+                    type="text"
+                    value={brandName}
+                    onChange={(e) => setBrandName(e.target.value)}
+                    placeholder="e.g. Maison Valmont Summer Collection"
+                    maxLength={80}
+                    className="mt-3 w-full bg-transparent font-display text-2xl text-cream placeholder:text-dim/30 focus:outline-none"
+                  />
+                </div>
+
+                <div className="group rounded-2xl border border-white/10 bg-white/[0.01] p-5 transition-all duration-300 focus-within:border-accent focus-within:bg-white/[0.02]">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-dim font-medium mb-4 group-focus-within:text-accent transition-colors">
+                    <span>Source Material & Key Details</span>
+                    <span className="text-dim/50 font-sans tracking-normal">{reference.length}/8000</span>
+                  </div>
+                  <textarea
+                    value={reference}
+                    onChange={(e) => setReference(e.target.value.slice(0, 8000))}
+                    placeholder="Paste product features, aesthetic guidelines, target audience specifics, or pricing here. Be as detailed as you like."
+                    rows={5}
+                    className="w-full resize-none bg-transparent text-sm font-light leading-relaxed text-cream placeholder:text-dim/30 focus:outline-none"
+                  />
+                </div>
+
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={handleFileDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="group cursor-pointer rounded-2xl border border-dashed border-white/20 bg-white/[0.01] p-8 text-center transition-all duration-300 hover:border-accent hover:bg-accent/[0.02]"
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <div className="size-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/10 group-hover:scale-110 transition-all duration-500">
+                    <UploadCloud className="size-5 text-dim group-hover:text-accent transition-colors" />
+                  </div>
+                  <p className="text-sm font-medium text-cream mb-1">
+                    Upload moodboards or brand decks
+                  </p>
+                  <p className="text-[11px] text-dim font-light">
+                    Drag & drop files here or click to browse (PDF, DOCX, TXT, Images)
+                  </p>
+                </div>
+
+                {files.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {files.map((file, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-mist group hover:border-accent/50 transition-colors"
                       >
-                        <Check className="size-2.5" strokeWidth={3} />
+                        <FileText className="size-3.5 text-accent/70" />
+                        <span className="max-w-[180px] truncate">{file.name}</span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFile(idx);
+                          }}
+                          className="text-dim hover:text-red-400 ml-1 transition-colors"
+                        >
+                          <X className="size-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+
+          </div>
+
+          {/* RIGHT COLUMN: The Director's Console */}
+          <div className="lg:sticky lg:top-20 space-y-6">
+            
+            <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.02] p-8 backdrop-blur-2xl shadow-2xl overflow-hidden group">
+              {/* Decorative gradient orb */}
+              <div className="absolute -top-24 -right-24 size-64 rounded-full bg-accent/10 blur-3xl opacity-50 group-hover:bg-accent/20 transition-colors duration-700" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-6">
+                  <div className="flex items-center gap-2.5">
+                    <Compass className="size-5 text-accent" />
+                    <span className="font-display text-lg text-cream">Live Overview</span>
+                  </div>
+                  <span className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">
+                    <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Synced
+                  </span>
+                </div>
+
+                <div className="space-y-8">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-dim block mb-2">
+                      Selected Persona
+                    </span>
+                    <p className="font-display text-3xl text-cream leading-tight mb-2">
+                      {brandName.trim() ? (
+                        <>
+                          <span className="text-accent">{brandName.trim()}</span>
+                          <br />
+                          <span className="text-xl text-mist/60 font-sans tracking-tight">as {activeProfile.label}</span>
+                        </>
+                      ) : (
+                        activeProfile.label
+                      )}
+                    </p>
+                    <p className="text-sm text-mist/80 font-light italic">
+                      "{activeProfile.tagline}"
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="rounded-2xl bg-white/5 p-4 border border-white/5">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-dim block mb-1">
+                        Timeline
+                      </span>
+                      <span className="block font-display text-2xl text-cream mb-1">
+                        {DURATIONS[duration].label.split(' ')[0]} {DURATIONS[duration].label.split(' ')[1]}
+                      </span>
+                      <span className="text-xs text-dim font-light">{DURATIONS[duration].days} Days</span>
+                    </div>
+
+                    <div className="rounded-2xl bg-white/5 p-4 border border-white/5">
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-dim block mb-1">
+                        Output
+                      </span>
+                      <span className="block font-display text-2xl text-accent mb-1">
+                        {postCount} Posts
+                      </span>
+                      <span className="text-xs text-dim font-light">
+                        ~{(postCount / (DURATIONS[duration].days / 7)).toFixed(1)} / week
                       </span>
                     </div>
+                  </div>
 
-                    <h4 className="mt-4 font-display text-lg font-medium text-cream">
-                      {profile.label}
-                    </h4>
-                    <p className="mt-1 text-[11px] text-accent font-medium leading-tight">
-                      {profile.tagline}
-                    </p>
-                    <p className="mt-2 text-[11px] text-mist leading-relaxed line-clamp-2">
-                      {profile.dialectDescription}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Section 02: Cadence & Strategic Volume */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="flex size-6 items-center justify-center rounded-full bg-accent text-ink text-[11px] font-bold">
-                2
-              </span>
-              <div>
-                <h3 className="font-display text-xl text-cream font-medium">
-                  Publishing Cadence & Volume
-                </h3>
-                <p className="text-xs text-dim">
-                  Strategic spacing avoids creative repetition and optimizes audience retention.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {/* Duration Options */}
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-dim block mb-2 font-medium">
-                  Campaign Duration
-                </label>
-                <div className="grid gap-2.5 sm:grid-cols-3">
-                  {DURATION_CONFIGS.map((cfg) => {
-                    const isSelected = duration === cfg.key;
-                    return (
-                      <button
-                        key={cfg.key}
-                        type="button"
-                        onClick={() => setDuration(cfg.key)}
-                        className={`rounded-xl border p-3.5 text-left transition-all ${
-                          isSelected
-                            ? "border-accent bg-accent/[0.08]"
-                            : "border-line bg-white/[0.015] hover:border-white/20"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-cream">{cfg.label}</span>
-                          {isSelected && <Check className="size-3 text-accent" strokeWidth={3} />}
-                        </div>
-                        <span className="mt-1 block text-[10px] text-dim">{cfg.recommendedFor}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Volume Options */}
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-dim block mb-2 font-medium">
-                  Volume of Posts
-                </label>
-                <div className="grid gap-2.5 sm:grid-cols-3">
-                  {VOLUME_CONFIGS.map((cfg) => {
-                    const isSelected = postCount === cfg.value;
-                    return (
-                      <button
-                        key={cfg.value}
-                        type="button"
-                        onClick={() => setPostCount(cfg.value)}
-                        className={`rounded-xl border p-3.5 text-left transition-all ${
-                          isSelected
-                            ? "border-accent bg-accent/[0.08]"
-                            : "border-line bg-white/[0.015] hover:border-white/20"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-cream">{cfg.label}</span>
-                          {isSelected && <Check className="size-3 text-accent" strokeWidth={3} />}
-                        </div>
-                        <span className="mt-1 block text-[10px] text-dim">{cfg.rhythm}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 03: Brand Voice & Reference DNA */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="flex size-6 items-center justify-center rounded-full bg-accent text-ink text-[11px] font-bold">
-                3
-              </span>
-              <div>
-                <h3 className="font-display text-xl text-cream font-medium">
-                  Brand Voice & Contextual DNA
-                </h3>
-                <p className="text-xs text-dim">
-                  Feed real facts, prices, tone guidelines, or upload existing collateral.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {/* Brand Name */}
-              <div className="rounded-2xl border border-line bg-white/[0.015] p-4 transition-colors focus-within:border-accent">
-                <label className="text-[10px] uppercase tracking-wider text-dim block font-medium">
-                  Brand / Studio Name
-                </label>
-                <input
-                  type="text"
-                  value={brandName}
-                  onChange={(e) => setBrandName(e.target.value)}
-                  placeholder="e.g. Aurelia Living, Maison Valmont, Saffron Co."
-                  maxLength={80}
-                  className="mt-2 w-full bg-transparent font-display text-xl text-cream placeholder:text-dim/40 focus:outline-none"
-                />
-              </div>
-
-              {/* Reference Text */}
-              <div className="rounded-2xl border border-line bg-white/[0.015] p-4 transition-colors focus-within:border-accent">
-                <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-dim font-medium mb-2">
-                  <span>Reference Material & Product Details</span>
-                  <span className="text-dim/60">{reference.length}/8000</span>
-                </div>
-                <textarea
-                  value={reference}
-                  onChange={(e) => setReference(e.target.value.slice(0, 8000))}
-                  placeholder="Paste product features, key selling points, launch dates, prices, tone guides, or target demographics here. The AI weaves these actual facts into every caption."
-                  rows={4}
-                  className="w-full resize-none bg-transparent text-xs leading-relaxed text-cream placeholder:text-dim/40 focus:outline-none"
-                />
-              </div>
-
-              {/* Document Dropzone */}
-              <div
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleFileDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className="group cursor-pointer rounded-2xl border border-dashed border-line bg-white/[0.01] p-6 text-center transition-all hover:border-accent hover:bg-accent/[0.02]"
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <UploadCloud className="mx-auto size-6 text-dim transition-colors group-hover:text-accent" />
-                <p className="mt-2 text-xs font-medium text-cream">
-                  Click or drag brand files here to upload
-                </p>
-                <p className="mt-1 text-[10px] text-dim">
-                  Supports PDF pitch decks, Word docs, Excel spreadsheets, Text notes, or Moodboard images
-                </p>
-              </div>
-
-              {/* Uploaded File Chips */}
-              {files.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {files.map((file, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-2 rounded-full border border-line bg-white/[0.03] px-3 py-1 text-xs text-mist"
-                    >
-                      <FileText className="size-3 text-accent" />
-                      <span className="max-w-[150px] truncate text-[11px]">{file.name}</span>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeFile(idx);
-                        }}
-                        className="text-dim hover:text-red-400 transition-colors"
-                      >
-                        <X className="size-3" />
-                      </button>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-dim block mb-3">
+                      Narrative Pillars
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {activeProfile.primaryPillars.map((pillar) => (
+                        <span
+                          key={pillar}
+                          className="text-xs text-mist bg-white/5 border border-white/10 rounded-full px-3 py-1.5 font-light"
+                        >
+                          {pillar}
+                        </span>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5">
+                    <div className="flex items-center gap-2 text-accent text-xs uppercase tracking-widest font-medium mb-3">
+                      <ShieldCheck className="size-4" />
+                      <span>Atelier Output Includes</span>
+                    </div>
+                    <ul className="text-sm text-mist/90 space-y-2.5 font-light">
+                      <li className="flex items-start gap-2">
+                        <span className="text-accent mt-0.5">•</span> Premium copy & tailored hashtags
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-accent mt-0.5">•</span> Art direction & visual guidelines
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-accent mt-0.5">•</span> Strategic publishing schedule
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-accent mt-0.5">•</span> Direct Google Calendar sync
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
 
-          {/* Action CTA */}
-          <div className="pt-4 border-t border-line">
-            {error && (
-              <p className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400">
-                {error}
-              </p>
-            )}
-
-            <div className="flex items-center justify-between gap-4">
-              {onCancel && (
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  className="rounded-full border border-line px-5 py-3 text-xs uppercase tracking-wider text-dim hover:text-cream"
-                >
-                  Return to Briefs
-                </button>
+            {/* Action CTA Box */}
+            <div className="bg-ink/60 border border-white/10 rounded-[2rem] p-6 backdrop-blur-xl">
+              {error && (
+                <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400 font-light flex items-start gap-3">
+                  <X className="size-5 shrink-0 text-red-400 mt-0.5" />
+                  <p>{error}</p>
+                </div>
               )}
 
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="group relative ml-auto inline-flex cursor-pointer items-center gap-2.5 overflow-hidden rounded-full bg-accent px-8 py-3.5 text-xs font-medium uppercase tracking-[0.2em] text-ink transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 shadow-xl"
+                className="w-full group relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-accent px-8 py-5 text-sm font-medium uppercase tracking-[0.2em] text-ink transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_40px_rgba(201,169,126,0.3)] hover:shadow-[0_0_60px_rgba(201,169,126,0.4)]"
               >
-                <Sparkles className="size-4" />
-                <span>Commission Strategy Blueprint</span>
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <Sparkles className="size-5 relative z-10" />
+                <span className="relative z-10">Generate Strategy</span>
+                <ArrowRight className="size-5 relative z-10 transition-transform group-hover:translate-x-1" />
               </button>
+              
+              <p className="text-center text-[10px] text-dim uppercase tracking-widest mt-4">
+                Powered by Atelier Engine v2.0
+              </p>
             </div>
           </div>
-        </div>
-
-        {/* RIGHT COLUMN: Creative Director Console (Live Inspector) */}
-        <div className="space-y-6">
-          <div className="sticky top-28 rounded-3xl border border-line bg-ink/80 p-6 backdrop-blur-xl shadow-2xl">
-            <div className="flex items-center justify-between border-b border-line pb-4">
-              <div className="flex items-center gap-2">
-                <Compass className="size-4 text-accent" />
-                <span className="text-[11px] uppercase tracking-[0.24em] text-cream font-medium">
-                  Director's Brief Inspector
-                </span>
-              </div>
-              <span className="flex items-center gap-1.5 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live Preview
-              </span>
-            </div>
-
-            {/* Selected Profile Highlight */}
-            <div className="mt-5 space-y-4">
-              <div>
-                <span className="text-[10px] uppercase tracking-wider text-dim block">
-                  Chosen Persona
-                </span>
-                <p className="mt-1 font-display text-xl text-cream">
-                  {brandName.trim() ? (
-                    <>
-                      <span className="text-accent">{brandName.trim()}</span>{" "}
-                      <span className="text-dim text-sm font-sans">({activeProfile.label})</span>
-                    </>
-                  ) : (
-                    activeProfile.label
-                  )}
-                </p>
-                <p className="mt-1 text-xs text-mist leading-relaxed">
-                  {activeProfile.tagline}
-                </p>
-              </div>
-
-              {/* Target Audience */}
-              <div className="border-t border-line/60 pt-3">
-                <span className="text-[10px] uppercase tracking-wider text-dim block">
-                  Target Demographic
-                </span>
-                <p className="mt-1 text-xs text-cream/90 font-medium">
-                  {activeProfile.targetAudience}
-                </p>
-              </div>
-
-              {/* Cadence Metrics */}
-              <div className="grid grid-cols-2 gap-3 border-t border-line/60 pt-3">
-                <div className="rounded-xl border border-line bg-white/[0.02] p-3">
-                  <span className="text-[10px] uppercase tracking-wider text-dim block">
-                    Duration
-                  </span>
-                  <span className="mt-1 block font-display text-lg text-cream">
-                    {DURATIONS[duration].label}
-                  </span>
-                  <span className="text-[10px] text-dim">{DURATIONS[duration].days} calendar days</span>
-                </div>
-
-                <div className="rounded-xl border border-line bg-white/[0.02] p-3">
-                  <span className="text-[10px] uppercase tracking-wider text-dim block">
-                    Total Volume
-                  </span>
-                  <span className="mt-1 block font-display text-lg text-accent">
-                    {postCount} Posts
-                  </span>
-                  <span className="text-[10px] text-dim">
-                    ~{(postCount / (DURATIONS[duration].days / 7)).toFixed(1)} posts / week
-                  </span>
-                </div>
-              </div>
-
-              {/* Strategic Pillars To Be Generated */}
-              <div className="border-t border-line/60 pt-3">
-                <span className="text-[10px] uppercase tracking-wider text-dim block mb-2">
-                  Rotating Strategy Pillars
-                </span>
-                <div className="space-y-2">
-                  {activeProfile.primaryPillars.map((pillar, idx) => (
-                    <div
-                      key={pillar}
-                      className="flex items-center justify-between text-xs text-mist bg-white/[0.02] border border-line rounded-lg px-2.5 py-1.5"
-                    >
-                      <span className="text-[11px] font-medium text-cream">{pillar}</span>
-                      <span className="text-[10px] text-dim">Pillar #{idx + 1}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* AI Deliverables Guarantee */}
-              <div className="rounded-2xl border border-accent/20 bg-accent/[0.03] p-4 text-xs space-y-2">
-                <div className="flex items-center gap-2 text-accent font-medium text-[11px] uppercase tracking-wider">
-                  <ShieldCheck className="size-3.5" />
-                  <span>Atelier Production Guarantee</span>
-                </div>
-                <ul className="text-[11px] text-mist space-y-1 pl-4 list-disc marker:text-accent">
-                  <li>Full thumb-stopping captions with hook & CTA</li>
-                  <li>Art-directed framing & photography notes</li>
-                  <li>Exact day & optimal hour scheduling</li>
-                  <li>Instant 1-click Google Calendar sync & .ics export</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

@@ -23,7 +23,12 @@ import {
   X,
   Loader2,
   AlertTriangle,
+  User,
+  LogOut,
+  Settings,
+  UserCircle,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { INDUSTRIES, DURATIONS } from "@/lib/engine";
 import type { IndustryKey } from "@/lib/engine/types";
 import { CreateBriefStudio } from "./create-brief-studio";
@@ -100,6 +105,8 @@ export function DashboardClient({
     plan: SerializedPlan;
     posts: SerializedPost[];
   } | null>(null);
+
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -262,7 +269,7 @@ export function DashboardClient({
       )}
 
       {/* Dashboard Nav Bar / Tab Controls */}
-      <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="flex items-center gap-2.5 text-[11px] uppercase tracking-[0.34em] text-mist">
             <span className="inline-block size-1.5 rounded-full bg-accent" />
@@ -273,25 +280,26 @@ export function DashboardClient({
           </h1>
         </div>
 
-        {/* 3 Main Tabs */}
-        <div className="flex items-center rounded-full border border-line bg-white/[0.02] p-1 text-xs">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+          {/* 3 Main Tabs */}
+          <div className="flex items-center rounded-full border border-line bg-white/[0.02] p-1 text-xs overflow-x-auto no-scrollbar">
           <button
             type="button"
             onClick={() => {
               setActiveTab("briefs");
               setJustCreatedPlan(null);
             }}
-            className={`flex items-center gap-2 rounded-full px-5 py-2.5 font-medium transition-all ${
+            className={`group flex items-center gap-2 rounded-full px-5 py-2.5 font-medium transition-all scope-${activePlans[0]?.industry || "real-estate"} ${
               activeTab === "briefs"
-                ? "bg-accent text-ink shadow-lg"
-                : "text-mist hover:text-cream"
+                ? "bg-accent text-ink shadow-[0_0_15px_rgba(var(--accent),0.3)]"
+                : "text-mist hover:text-cream hover:bg-accent/10"
             }`}
           >
-            <Layers className="size-3.5" />
+            <Layers className={`size-3.5 transition-colors ${activeTab === "briefs" ? "text-ink" : "group-hover:text-accent"}`} />
             <span>My Briefs</span>
             <span
-              className={`rounded-full px-2 py-0.5 text-[10px] ${
-                activeTab === "briefs" ? "bg-ink/20 text-ink" : "bg-white/10 text-cream"
+              className={`rounded-full px-2 py-0.5 text-[10px] transition-colors ${
+                activeTab === "briefs" ? "bg-ink/20 text-ink" : "bg-white/10 text-cream group-hover:bg-accent/20 group-hover:text-accent"
               }`}
             >
               {activePlans.length}
@@ -301,13 +309,13 @@ export function DashboardClient({
           <button
             type="button"
             onClick={() => setActiveTab("create")}
-            className={`flex items-center gap-2 rounded-full px-5 py-2.5 font-medium transition-all ${
+            className={`group flex items-center gap-2 rounded-full px-5 py-2.5 font-medium transition-all scope-${activePlans[0]?.industry || "real-estate"} ${
               activeTab === "create"
-                ? "bg-accent text-ink shadow-lg"
-                : "text-mist hover:text-cream"
+                ? "bg-accent text-ink shadow-[0_0_15px_rgba(var(--accent),0.3)]"
+                : "text-mist hover:text-cream hover:bg-accent/10"
             }`}
           >
-            <Plus className="size-3.5" />
+            <Plus className={`size-3.5 transition-colors ${activeTab === "create" ? "text-ink" : "group-hover:text-accent"}`} />
             <span>Create a Brief</span>
           </button>
 
@@ -317,13 +325,13 @@ export function DashboardClient({
               setActiveTab("recycle-bin");
               setJustCreatedPlan(null);
             }}
-            className={`flex items-center gap-2 rounded-full px-5 py-2.5 font-medium transition-all ${
+            className={`group flex items-center gap-2 rounded-full px-5 py-2.5 font-medium transition-all scope-${activePlans[0]?.industry || "real-estate"} ${
               activeTab === "recycle-bin"
-                ? "bg-accent text-ink shadow-lg"
-                : "text-mist hover:text-cream"
+                ? "bg-accent text-ink shadow-[0_0_15px_rgba(var(--accent),0.3)]"
+                : "text-mist hover:text-cream hover:bg-accent/10"
             }`}
           >
-            <Trash2 className="size-3.5" />
+            <Trash2 className={`size-3.5 transition-colors ${activeTab === "recycle-bin" ? "text-ink" : "group-hover:text-accent"}`} />
             <span>Recycle Bin</span>
             {trashedPlans.length > 0 && (
               <span
@@ -335,10 +343,57 @@ export function DashboardClient({
               </span>
             )}
           </button>
-        </div>
-      </div>
+          </div>
 
-      {/* ------------------------------------------------------------- */}
+          <div className="hidden h-8 w-px bg-line sm:block" />
+
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className={`group flex items-center gap-2 rounded-full border border-line bg-transparent px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.2em] text-cream transition-all scope-${activePlans[0]?.industry || "real-estate"} hover:border-accent hover:bg-accent hover:text-ink hover:shadow-lg`}
+              >
+                <User className="size-3.5 transition-transform group-hover:scale-110" />
+                <span>Profile</span>
+              </button>
+
+              {isProfileOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsProfileOpen(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border border-line bg-ink/95 backdrop-blur-xl shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="border-b border-white/5 px-4 py-3">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-dim font-medium mb-1">Signed in as</p>
+                      <p className="text-sm text-cream truncate font-medium">{userEmail}</p>
+                    </div>
+                    <div className="p-1">
+                      <Link href="/dashboard" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-mist hover:bg-white/5 hover:text-cream transition-colors">
+                        <UserCircle className="size-4" /> Account Settings
+                      </Link>
+                      <Link href="/dashboard" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-mist hover:bg-white/5 hover:text-cream transition-colors">
+                        <Settings className="size-4" /> Workspace Preferences
+                      </Link>
+                    </div>
+                    <div className="border-t border-white/5 p-1">
+                      <form action="/api/auth/logout" method="POST">
+                        <button type="submit" className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-400 hover:bg-red-400/10 transition-colors text-left font-medium">
+                          <LogOut className="size-4" /> Sign out
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>      {/* ------------------------------------------------------------- */}
       {/* TAB 1: MY BRIEFS                                              */}
       {/* ------------------------------------------------------------- */}
       {activeTab === "briefs" && (
@@ -384,10 +439,10 @@ export function DashboardClient({
                   key={key}
                   type="button"
                   onClick={() => setSelectedIndustry(key)}
-                  className={`rounded-full px-3 py-1.5 text-[11px] transition-all ${
+                  className={`rounded-full px-3 py-1.5 text-[11px] transition-all border scope-${key} ${
                     selectedIndustry === key
-                      ? "bg-accent/20 text-accent border border-accent/40"
-                      : "text-dim hover:text-cream"
+                      ? "bg-accent text-ink border-transparent shadow-md"
+                      : "border-transparent text-dim hover:text-accent hover:bg-white/5"
                   }`}
                 >
                   {ind.label}
@@ -398,7 +453,7 @@ export function DashboardClient({
 
           {/* Active Plans Grid */}
           {filteredActivePlans.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-line p-16 text-center">
+            <div className="w-full rounded-3xl border border-dashed border-line p-16 text-center">
               <Quote className="mx-auto mb-4 size-8 text-dim" strokeWidth={1} />
               <h3 className="font-display text-xl font-medium text-cream">
                 {searchQuery || selectedIndustry !== "all"
@@ -413,7 +468,7 @@ export function DashboardClient({
               <button
                 type="button"
                 onClick={() => setActiveTab("create")}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-ink transition-transform hover:scale-[1.03]"
+                className={`mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 text-[11px] font-medium uppercase tracking-[0.2em] transition-all scope-${activePlans[0]?.industry || "real-estate"} bg-accent text-ink hover:scale-[1.03] shadow-lg hover:shadow-xl`}
               >
                 <Plus className="size-3.5" />
                 Create Brief Now

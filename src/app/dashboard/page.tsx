@@ -62,10 +62,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <SiteHeader />
       <Reveal />
 
-      <main className="mx-auto max-w-7xl px-5 pb-24 pt-28 sm:px-8 lg:pt-36">
+      <main className="mx-auto max-w-[90rem] px-5 pb-24 pt-20 sm:px-8 lg:pt-20">
         <DashboardClient
           initialActivePlans={activeRows.map(serializePlan)}
           initialTrashedPlans={trashedRows.map(serializePlan)}
