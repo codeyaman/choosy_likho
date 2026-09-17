@@ -67,11 +67,14 @@ interface Props {
   userEmail?: string | null;
 }
 
-const DATE_FMT = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-});
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function formatSafeDate(dateInput: string | Date | null | undefined): string {
+  if (!dateInput) return "";
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return "";
+  return `${d.getDate()} ${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
+}
 
 export function DashboardClient({
   initialActivePlans,
@@ -434,7 +437,7 @@ export function DashboardClient({
                       {/* Card Header */}
                       <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-dim">
                         <span className="text-accent font-medium">{ind?.label ?? p.industry}</span>
-                        <span>{DATE_FMT.format(new Date(p.createdAt))}</span>
+                        <span suppressHydrationWarning>{formatSafeDate(p.createdAt)}</span>
                       </div>
 
                       {/* Brand Title */}
@@ -771,8 +774,8 @@ export function DashboardClient({
                         <span className="text-red-400 font-medium">
                           {ind?.label ?? p.industry}
                         </span>
-                        <span>
-                          Deleted {p.deletedAt ? DATE_FMT.format(new Date(p.deletedAt)) : "Recently"}
+                        <span suppressHydrationWarning>
+                          Deleted {p.deletedAt ? formatSafeDate(p.deletedAt) : "Recently"}
                         </span>
                       </div>
 

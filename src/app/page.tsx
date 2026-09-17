@@ -266,7 +266,7 @@ export default async function Home() {
                     <div className="relative">
                       <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-dim">
                         <span className="text-accent">{ind?.label ?? p.industry}</span>
-                        <span>{DATE_FMT.format(p.createdAt)}</span>
+                        <span suppressHydrationWarning>{DATE_FMT.format(p.createdAt)}</span>
                       </div>
                       <h3 className="mt-4 font-display text-xl font-medium leading-snug">
                         {p.brandName ? p.brandName : "Untitled house"}
