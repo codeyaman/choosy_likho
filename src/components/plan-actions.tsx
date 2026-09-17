@@ -1,10 +1,11 @@
 "use client";
 
-import { Check, Copy, Download, PenLine, RotateCcw } from "lucide-react";
+import { Check, Copy, Download, PenLine, RotateCcw, Calendar } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { planToMarkdown, type PlanMeta } from "@/lib/engine";
+import { generateIcsCalendar, downloadIcsFile } from "@/lib/calendar";
 
 interface SerializablePost {
   position: number;
@@ -107,6 +108,36 @@ export function PlanActions({ meta, posts, regenerate }: Props) {
       </button>
       <button
         type="button"
+        onClick={() => {
+          const ics = generateIcsCalendar(
+            posts.map((p) => ({
+              position: p.position,
+              isoDate: (p as any).isoDate || new Date().toISOString(),
+              dayLabel: p.dayLabel,
+              timeLabel: p.timeLabel,
+              pillar: p.pillar,
+              category: (p as any).category,
+              caption: p.caption,
+              visualDirection: p.visualDirection,
+              hashtags: p.hashtags,
+            })),
+            {
+              brandName: meta.brandName,
+              industryLabel: meta.industryLabel,
+            }
+          );
+          downloadIcsFile(
+            `${(meta.brandName || meta.industryLabel || "plan").toLowerCase().replace(/\s+/g, "-")}-calendar.ics`,
+            ics
+          );
+        }}
+        className="group inline-flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-accent/40 bg-accent/5 px-4 py-3 text-[11px] uppercase tracking-[0.2em] text-accent transition-all hover:bg-accent hover:text-ink"
+      >
+        <span>Sync Calendar (.ics)</span>
+        <Calendar className="size-4" strokeWidth={1.6} />
+      </button>
+      <button
+        type="button"
         onClick={regen}
         disabled={working}
         className="group inline-flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-line px-4 py-3 text-[11px] uppercase tracking-[0.2em] text-cream transition-all hover:border-accent disabled:opacity-50"
@@ -115,10 +146,10 @@ export function PlanActions({ meta, posts, regenerate }: Props) {
         <RotateCcw className={`size-4 ${working ? "animate-spin" : ""}`} strokeWidth={1.5} />
       </button>
       <Link
-        href="/#brief"
+        href="/dashboard"
         className="group inline-flex items-center justify-between gap-3 rounded-xl bg-accent px-4 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-ink transition-transform hover:scale-[1.02]"
       >
-        <span>New brief</span>
+        <span>Dashboard</span>
         <PenLine className="size-4" strokeWidth={1.8} />
       </Link>
     </div>

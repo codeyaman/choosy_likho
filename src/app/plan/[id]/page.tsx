@@ -2,7 +2,9 @@ import { asc, eq } from "drizzle-orm";
 import {
   ArrowLeft,
   BookOpen,
+  Calendar,
   CalendarDays,
+  Check,
   Clapperboard,
   Feather,
   Hash,
@@ -26,6 +28,7 @@ import { db } from "@/db";
 import { plans, posts } from "@/db/schema";
 import { DURATIONS, INDUSTRIES } from "@/lib/engine";
 import { getUserSession } from "@/lib/auth";
+import { createGoogleCalendarUrl } from "@/lib/calendar";
 import type { LucideIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -81,9 +84,11 @@ export default async function PlanPage({
 
   const serialized = rows.map((r) => ({
     position: r.position,
+    isoDate: r.isoDate,
     dayLabel: r.dayLabel,
     timeLabel: r.timeLabel,
     pillar: r.pillar,
+    category: r.category,
     caption: r.caption,
     visualDirection: r.visualDirection,
     hashtags: r.hashtags,
@@ -99,13 +104,22 @@ export default async function PlanPage({
         <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[340px_1fr] xl:gap-20">
           {/* -------- left rail -------- */}
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-dim transition-colors hover:text-cream"
-            >
-              <ArrowLeft className="size-3.5" />
-              The Studio
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.24em] text-accent transition-colors hover:text-cream"
+              >
+                <ArrowLeft className="size-3.5" />
+                Dashboard
+              </Link>
+              <span className="text-dim/50">·</span>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.24em] text-dim transition-colors hover:text-cream"
+              >
+                The Studio
+              </Link>
+            </div>
 
             <div data-reveal className="mt-8">
               <p className="flex items-center gap-3 text-[10px] uppercase tracking-[0.32em] text-mist">
@@ -236,15 +250,39 @@ export default async function PlanPage({
                             </p>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end gap-1.5 text-[11px] uppercase tracking-[0.16em] text-mist">
-                          <span className="flex items-center gap-2">
-                            <CalendarDays className="size-3.5 text-accent" strokeWidth={1.6} />
-                            {r.dayLabel}
-                          </span>
-                          <span className="flex items-center gap-2 text-dim">
-                            <Clock className="size-3.5" strokeWidth={1.6} />
-                            {r.timeLabel}
-                          </span>
+                        <div className="flex flex-col items-end gap-2 text-[11px] uppercase tracking-[0.16em] text-mist">
+                          <div className="flex items-center gap-3">
+                            <span className="flex items-center gap-1.5">
+                              <CalendarDays className="size-3.5 text-accent" strokeWidth={1.6} />
+                              {r.dayLabel}
+                            </span>
+                            <span className="flex items-center gap-1.5 text-dim">
+                              <Clock className="size-3.5" strokeWidth={1.6} />
+                              {r.timeLabel}
+                            </span>
+                          </div>
+                          <a
+                            href={createGoogleCalendarUrl(
+                              {
+                                position: r.position,
+                                isoDate: r.isoDate,
+                                dayLabel: r.dayLabel,
+                                timeLabel: r.timeLabel,
+                                pillar: r.pillar,
+                                category: r.category,
+                                caption: r.caption,
+                                visualDirection: r.visualDirection,
+                                hashtags: r.hashtags,
+                              },
+                              { brandName: plan.brandName, industryLabel: industry?.label }
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-[10px] tracking-wider text-accent transition-colors hover:border-accent"
+                          >
+                            <Calendar className="size-3" />
+                            <span>Add to GCal</span>
+                          </a>
                         </div>
                       </header>
 
@@ -322,7 +360,7 @@ export default async function PlanPage({
                       href={`/login?returnTo=/plan/${plan.id}`}
                       className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-ink transition-all hover:bg-cream"
                     >
-                      Login to Unlock
+                      Login to Unlock & Save to Dashboard
                     </Link>
                   </div>
                 </li>
@@ -340,11 +378,11 @@ export default async function PlanPage({
                 the suggested hour — then come back for the next chapter.
               </p>
               <Link
-                href="/#brief"
+                href="/dashboard"
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-[11px] font-medium uppercase tracking-[0.22em] text-ink transition-transform hover:scale-[1.03]"
               >
                 <PenLine className="size-3.5" />
-                Write another brief
+                Go to Dashboard
               </Link>
             </div>
           </div>

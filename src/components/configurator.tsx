@@ -72,7 +72,11 @@ const STAGES = [
   "Binding the plan for delivery…",
 ];
 
-export function Configurator() {
+export interface ConfiguratorProps {
+  onPlanCreated?: (planId: string) => void;
+}
+
+export function Configurator({ onPlanCreated }: ConfiguratorProps = {}) {
   const router = useRouter();
   const [industry, setIndustry] = useState<IndustryKey>("real-estate");
   const [duration, setDuration] = useState<DurationKey>("2w");
@@ -131,7 +135,12 @@ export function Configurator() {
       const data = (await res.json()) as { id: string };
       const elapsed = Date.now() - started;
       await new Promise((r) => setTimeout(r, Math.max(0, 3600 - elapsed)));
-      router.push(`/plan/${data.id}`);
+      if (onPlanCreated) {
+        setLoading(false);
+        onPlanCreated(data.id);
+      } else {
+        router.push(`/plan/${data.id}`);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setLoading(false);

@@ -9,6 +9,7 @@ export const plans = pgTable("plans", {
   reference: text("reference"),
   seed: integer("seed").notNull(),
   userId: text("user_id"),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
