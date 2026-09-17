@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { INDUSTRIES, DURATIONS } from "@/lib/engine";
 import type { IndustryKey } from "@/lib/engine/types";
-import { Configurator } from "@/components/configurator";
+import { CreateBriefStudio } from "./create-brief-studio";
 import {
   createGoogleCalendarUrl,
   generateIcsCalendar,
@@ -680,29 +680,34 @@ export function DashboardClient({
               </div>
             </div>
           ) : (
-            /* In-Dashboard Configurator Form */
-            <div className="rounded-3xl border border-line bg-white/[0.015] p-6 sm:p-10 backdrop-blur-xl">
-              <div className="mb-8 flex items-center justify-between border-b border-line pb-6">
+            /* In-Dashboard Atelier Creator Suite */
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-line pb-6">
                 <div>
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-accent">
-                    In-Dashboard Studio
+                  <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-accent font-medium">
+                    <Sparkles className="size-3.5" />
+                    Atelier Creator Suite · Commission Studio
                   </span>
-                  <h2 className="mt-1 font-display text-2xl font-medium text-cream sm:text-3xl">
-                    Commission a New Content Plan
+                  <h2 className="mt-1 font-display text-2xl sm:text-3xl font-medium text-cream">
+                    Craft Your Next Campaign Blueprint
                   </h2>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("briefs")}
-                  className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-dim hover:border-cream hover:text-cream"
+                  className="self-start sm:self-auto inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-dim hover:border-cream hover:text-cream transition-colors"
                 >
                   <ArrowLeft className="size-3.5" />
-                  <span>Cancel</span>
+                  <span>Return to Briefs</span>
                 </button>
               </div>
 
-              {/* Reused Configurator with in-dashboard completion callback */}
-              <Configurator onPlanCreated={handlePlanCreated} />
+              <div className="rounded-3xl border border-line bg-white/[0.015] p-6 sm:p-10 backdrop-blur-xl">
+                <CreateBriefStudio
+                  onPlanCreated={handlePlanCreated}
+                  onCancel={() => setActiveTab("briefs")}
+                />
+              </div>
             </div>
           )}
         </div>
