@@ -8,3 +8,8 @@ out/
 build
 .DS_Store
 *.pem
+
+# Local helper scripts
+add_pk.mjs
+fix_*.mjs
+

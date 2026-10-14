@@ -22,6 +22,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader } from "@/components/chrome";
 import { CopyButton } from "@/components/copy-button";
+import { GenAiButton } from "@/components/gen-ai-button";
 import { PlanActions } from "@/components/plan-actions";
 import { Reveal } from "@/components/reveal";
 import { db } from "@/db";
@@ -305,13 +306,16 @@ export default async function PlanPage({
                       </div>
 
                       {/* visual */}
-                      <div className="mx-7 mt-8 overflow-hidden rounded-2xl border border-line bg-white/[0.02] p-6 sm:mx-9">
-                        <div className="flex items-center justify-between gap-3">
+                      <div className="mx-7 mt-8 rounded-2xl border border-line bg-white/[0.02] p-6 sm:mx-9">
+                        <div className="relative z-20 flex items-center justify-between gap-3">
                           <p className="flex items-center gap-2 text-[10px] uppercase tracking-[0.28em] text-dim">
                             <Clapperboard className="size-3.5" strokeWidth={1.6} />
                             Visual direction
                           </p>
-                          <CopyButton text={r.visualDirection} label="Copy" copiedLabel="Copied" />
+                          <div className="flex gap-2">
+                            <GenAiButton visualDirection={r.visualDirection} />
+                            <CopyButton text={r.visualDirection} label="Copy" copiedLabel="Copied" />
+                          </div>
                         </div>
                         <p className="mt-3 text-[13px] leading-[1.85] text-mist">
                           {r.visualDirection}
